@@ -1,0 +1,121 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>es.consum.backend</groupId>
+        <artifactId>consum-parent</artifactId>
+        <version>6.0.2</version>
+    </parent>
+
+    <artifactId>prueba-api</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>prueba-api</name>
+    <description>Seed project to develop new backend applications in Consum framework</description>
+
+    <dependencies>
+        <!-- Internal dependencies -->
+        
+        <!-- Si no necesita infra-data, descomentar dependencia common-utils -->
+        <!-- 
+        <dependency>
+            <groupId>es.consum.backend.common</groupId>
+            <artifactId>common-utils</artifactId>
+        </dependency>
+        -->
+        <dependency>
+            <groupId>es.consum.backend.infrastructure</groupId>
+            <artifactId>infra-data</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>es.consum.backend.infrastructure.ws</groupId>
+            <artifactId>infra-ws-config</artifactId>
+        </dependency>
+         
+        <!-- TEST -->
+        <dependency>
+            <groupId>es.consum.backend.infrastructure</groupId>
+            <artifactId>infra-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+               
+        <!-- Descomentar en el caso de que necesiten ser usadas-->
+        <!-- 
+        <dependency>
+            <groupId>es.consum.backend.infrastructure.ws</groupId>
+            <artifactId>infra-ws-messaging</artifactId>
+        </dependency>
+	    <dependency>
+	        <groupId>es.consum.backend.infrastructure</groupId>
+	        <artifactId>infra-batch</artifactId>
+	    </dependency>
+        <dependency>
+            <groupId>es.consum.backend.infrastructure</groupId>
+            <artifactId>infra-reporting</artifactId>
+        </dependency>
+        -->
+        
+		<!-- Descomentar en el caso de que se use el generador-codigo para crear las entidades-->
+		 
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+        </dependency>
+        
+        
+        <!-- retry -->
+        <dependency>
+            <groupId>org.springframework.retry</groupId>
+            <artifactId>spring-retry</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.codecentric</groupId>
+            <artifactId>spring-boot-admin-starter-client</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <dependency>
+        	<groupId>es.consum.backend</groupId>
+        	<artifactId>prueba</artifactId>
+        	<version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        
+       <!--- jagv estoy intentando meter las io.swagger.annotations -->
+        <!-- https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-annotations  -->
+		<dependency>
+		    <groupId>io.swagger.core.v3</groupId>
+		    <artifactId>swagger-annotations</artifactId>
+		    <version>2.2.25</version>
+		</dependency>
+		
+        <dependency>
+		  <groupId>io.swagger</groupId>
+		  <artifactId>swagger-annotations</artifactId>
+		  <version>1.5.20</version>
+		</dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

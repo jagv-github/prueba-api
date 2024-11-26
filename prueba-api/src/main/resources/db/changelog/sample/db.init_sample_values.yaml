@@ -1,0 +1,30 @@
+databaseChangeLog:
+# databaseChangeLog: #quitar '#' si no existian anteriormente tablas en el fichero
+- changeSet:
+    id: init create table ENTIDADES
+    author: generador-codigo-consum
+    comment: changelog to populate ENTIDADES domain entities
+    dbms: h2,mysql
+    changes:
+    # ENTIDADES
+        - insert:
+            tableName: ENTIDADES
+            columns:
+            - column: 
+                name: ID
+                value: 1
+            - column: 
+                name: NROENT
+                value: 1
+            - column: 
+                name: NOMENT
+                value: "abc"
+            - column: 
+                name: CODAGRUP
+                value: "abc"
+            - column: 
+                name: TPOPRO
+                value: 1
+            - column: 
+                name: DISABLED
+                value: true

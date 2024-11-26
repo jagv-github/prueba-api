@@ -1,0 +1,21 @@
+---
+swagger: "2.0"
+info:
+  description: "Public API of services exposed by prueba-api application"
+  version: "0.0.1-SNAPSHOT"
+  title: "prueba-api Public API"
+  contact:
+    name: ""
+  license:
+    name: ""
+    url: ""
+basePath: "/prueba-api/"
+tags:
+- name: ""
+- name: ""
+- name: ""
+- name: ""
+schemes:
+- "http"
+- "https"
+paths:

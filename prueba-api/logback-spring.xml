@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="300 seconds">
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <property resource="META-INF/build-info.properties" />
+
+    <springProperty scope="context" name="loggingPath" source="logging.path" defaultValue="/var/tmp/log/consum/prueba-api/"/>
+    <springProperty scope="context" name="appendersEnabled" source="logging.appenders.enabled" defaultValue="true"/>
+    <springProperty scope="context" name="appName" source="spring.application.name"/>
+
+    <!--To avoid break lines in logs, following "patternLog" and "javaEntity" should be in a single line -->
+    <property name="patternLog" value="[%-5level] [%d{HH:mm:ss.SSS}] [%marker] [%thread] %logger{36} - %msg%n%wEx"/>
+    <property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}/spring.log}"/>
+
+    <if condition="${appendersEnabled}">
+        <then>
+            <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+                <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+                    <providers>
+                        <timestamp>
+                            <timeZone>CET</timeZone>
+                        </timestamp>
+                        <pattern>
+                            <pattern>
+                                {
+                                "severity":"%level",
+                                "app_name":"${appName}",
+                                "version":"${build.version}",
+                                "trace":"%X{X-B3-TraceId:-}",
+                                "span":"%X{X-B3-SpanId:-}",
+                                "parent":"%X{X-B3-ParentSpanId:-}",
+                                "correlation_id":"%X{x-correlation-id:-}",
+                                "pid":"${PID:-}",
+                                "thread":"%thread",
+                                "class":"%logger{40}",
+                                "message":"%message",
+                                "dt.span_id": "%X{dt.span_id:-}",
+                                "dt.trace_id": "%X{dt.trace_id:-}",
+                                "dt.entity.host": "%X{dt.entity.host:-}"
+                                }
+                            </pattern>
+                        </pattern>
+                    </providers>
+                </encoder>
+            </appender>
+            <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <encoder>
+                    <pattern>${patternLog}</pattern>
+                </encoder>
+                <file>${LOG_FILE}</file>
+                <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                    <fileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+                    <maxFileSize>${LOG_FILE_MAX_SIZE:-10MB}</maxFileSize>
+                    <maxHistory>${LOG_FILE_MAX_HISTORY:-0}</maxHistory>
+                </rollingPolicy>
+            </appender>
+            <appender name="error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <file>${loggingPath}/error.log</file>
+                <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                    <level>ERROR</level>
+                    <onMatch>ACCEPT</onMatch>
+                    <onMismatch>DENY</onMismatch>
+                </filter>
+                <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                    <!-- rollover daily -->
+                    <fileNamePattern>${loggingPath}/error-%d{dd-MM-yyyy}-%i.log.gz</fileNamePattern>
+                    <maxFileSize>10MB</maxFileSize>
+                    <maxHistory>30</maxHistory>
+                </rollingPolicy>
+                <encoder>
+                    <pattern>${patternLog}</pattern>
+                </encoder>
+            </appender>
+            <appender name="application" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <file>${loggingPath}/application.log</file>
+                <filter class="es.consum.backend.common.commonutils.logging.MarkerFilter">
+                    <marker>APPLICATION</marker>
+                    <OnMatch>ACCEPT</OnMatch>
+                    <OnMismatch>DENY</OnMismatch>
+                </filter>
+                <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                    <!-- rollover daily -->
+                    <fileNamePattern>${loggingPath}/application-%d{dd-MM-yyyy}-%i.log.gz</fileNamePattern>
+                    <maxFileSize>10MB</maxFileSize>
+                    <maxHistory>30</maxHistory>
+                </rollingPolicy>
+                <encoder>
+                    <pattern>${patternLog}</pattern>
+                </encoder>
+            </appender>
+            <appender name="batch" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <file>${loggingPath}/batch.log</file>
+                <filter class="es.consum.backend.common.commonutils.logging.MarkerFilter">
+                    <marker>BATCH</marker>
+                    <OnMatch>ACCEPT</OnMatch>
+                    <OnMismatch>DENY</OnMismatch>
+                </filter>
+                <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                    <!-- rollover daily -->
+                    <fileNamePattern>${loggingPath}/batch-%d{dd-MM-yyyy}-%i.log.gz</fileNamePattern>
+                    <maxFileSize>10MB</maxFileSize>
+                    <maxHistory>30</maxHistory>
+                </rollingPolicy>
+                <encoder>
+                    <pattern>${patternLog}</pattern>
+                </encoder>
+            </appender>
+            <appender name="common" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <file>${loggingPath}/common.log</file>
+                <filter class="es.consum.backend.common.commonutils.logging.MarkerFilter">
+                    <marker>COMMON</marker>
+                    <OnMatch>ACCEPT</OnMatch>
+                    <OnMismatch>DENY</OnMismatch>
+                </filter>
+                <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                    <!-- rollover daily -->
+                    <fileNamePattern>${loggingPath}/common-%d{dd-MM-yyyy}-%i.log.gz</fileNamePattern>
+                    <maxFileSize>10MB</maxFileSize>
+                    <maxHistory>30</maxHistory>
+                </rollingPolicy>
+                <encoder>
+                    <pattern>${patternLog}</pattern>
+                </encoder>
+            </appender>
+            <appender name="domain" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <file>${loggingPath}/domain.log</file>
+                <filter class="es.consum.backend.common.commonutils.logging.MarkerFilter">
+                    <marker>DOMAIN</marker>
+                    <OnMatch>ACCEPT</OnMatch>
+                    <OnMismatch>DENY</OnMismatch>
+                </filter>
+                <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                    <!-- rollover daily -->
+                    <fileNamePattern>${loggingPath}/domain-%d{dd-MM-yyyy}-%i.log.gz</fileNamePattern>
+                    <maxFileSize>10MB</maxFileSize>
+                    <maxHistory>30</maxHistory>
+                </rollingPolicy>
+                <encoder>
+                    <pattern>${patternLog}</pattern>
+                </encoder>
+            </appender>
+            <appender name="reporting" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <file>${loggingPath}/reporting.log</file>
+                <filter class="es.consum.backend.common.commonutils.logging.MarkerFilter">
+                    <marker>INFRA-REP</marker>
+                    <OnMatch>ACCEPT</OnMatch>
+                    <OnMismatch>DENY</OnMismatch>
+                </filter>
+                <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                    <!-- rollover daily -->
+                    <fileNamePattern>${loggingPath}/reporting-%d{dd-MM-yyyy}-%i.log.gz</fileNamePattern>
+                    <maxFileSize>10MB</maxFileSize>
+                    <maxHistory>30</maxHistory>
+                </rollingPolicy>
+                <encoder>
+                    <pattern>${patternLog}</pattern>
+                </encoder>
+            </appender>
+            <appender name="security" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <file>${loggingPath}/security.log</file>
+                <filter class="es.consum.backend.common.commonutils.logging.MarkerFilter">
+                    <marker>INFRA-SEC</marker>
+                    <OnMatch>ACCEPT</OnMatch>
+                    <OnMismatch>DENY</OnMismatch>
+                </filter>
+                <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                    <!-- rollover daily -->
+                    <fileNamePattern>${loggingPath}/security-%d{dd-MM-yyyy}-%i.log.gz</fileNamePattern>
+                    <maxFileSize>10MB</maxFileSize>
+                    <maxHistory>30</maxHistory>
+                </rollingPolicy>
+                <encoder>
+                    <pattern>${patternLog}</pattern>
+                </encoder>
+            </appender>
+            <appender name="ws" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <file>${loggingPath}/ws.log</file>
+                <filter class="es.consum.backend.common.commonutils.logging.MarkerFilter">
+                    <marker>INFRA-WS</marker>
+                    <OnMatch>ACCEPT</OnMatch>
+                    <OnMismatch>DENY</OnMismatch>
+                </filter>
+                <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                    <!-- rollover daily -->
+                    <fileNamePattern>${loggingPath}/ws-%d{dd-MM-yyyy}-%i.log.gz</fileNamePattern>
+                    <maxFileSize>10MB</maxFileSize>
+                    <maxHistory>30</maxHistory>
+                </rollingPolicy>
+                <encoder>
+                    <pattern>${patternLog}</pattern>
+                </encoder>
+            </appender>
+
+            <!-- log level of the module -->
+            <logger name="es.consum.backend.pruebaapi"/>
+            <!-- log level for Spring Batch -->
+            <logger name="org.springframework.batch">
+                <appender-ref ref="batch"/>
+            </logger>
+            <!-- In order to show Hibernate SQL request, log level should be DEBUG -->
+            <logger name="org.hibernate.SQL"/>
+            <!-- Log level for consum libraries -->
+            <logger name="es.consum.backend.application"/>
+            <logger name="es.consum.backend.infrastructure.data"/>
+            <logger name="es.consum.backend.infrastructure.reporting"/>
+            <logger name="es.consum.backend.infrastructure.ws"/>
+            <logger name="es.consum.backend.domain.domainutils"/>
+            <logger name="es.consum.backend.infrastructure.batch"/>
+            <logger name="es.consum.backend.common.commonutils"/>
+
+            <root>
+                <appender-ref ref="STDOUT"/>
+                <appender-ref ref="FILE"/>
+                <appender-ref ref="error"/>
+                <appender-ref ref="application"/>
+                <appender-ref ref="batch"/>
+                <appender-ref ref="common"/>
+                <appender-ref ref="domain"/>
+                <appender-ref ref="reporting"/>
+                <appender-ref ref="security"/>
+                <appender-ref ref="ws"/>
+            </root>
+        </then>
+    </if>
+    <root></root>
+</configuration>

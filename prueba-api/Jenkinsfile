@@ -1,0 +1,2 @@
+@Library('pipeline-library@support/4.1.0') _
+springBootPipeline servicePath: 'prueba-api', replicas: '1', namespace: 'jagv', limitCpu: '400m', limitMem: '400Mi', volumes: 'false'
